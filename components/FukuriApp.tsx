@@ -220,8 +220,8 @@ export default function FukuriApp() {
   const addTag = () => {
     if (newTag.trim() && !newTags.includes(newTag.trim())) {
       setNewTags([...newTags, newTag.trim()]);
-      setNewTag("");
     }
+    setNewTag("");
   };
 
   const handleEditOpen = () => {
@@ -546,7 +546,7 @@ export default function FukuriApp() {
           position: "fixed", inset: 0, background: "#0006",
           display: "flex", alignItems: "center", justifyContent: "center",
           zIndex: 100, padding: 20,
-        }} onMouseDown={e => e.target === e.currentTarget && setShowModal(false)}>
+        }}>
           <div style={{
             background: "#f7f5f0", borderRadius: 24,
             padding: "24px 20px 28px", width: "100%", maxWidth: 390,
