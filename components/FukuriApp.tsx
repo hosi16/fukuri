@@ -546,13 +546,17 @@ export default function FukuriApp() {
           position: "fixed", inset: 0, background: "#0006",
           display: "flex", alignItems: "center", justifyContent: "center",
           zIndex: 100, padding: 20,
-        }} onClick={e => e.target === e.currentTarget && setShowModal(false)}>
+        }} onMouseDown={e => e.target === e.currentTarget && setShowModal(false)}>
           <div style={{
             background: "#f7f5f0", borderRadius: 24,
             padding: "24px 20px 28px", width: "100%", maxWidth: 390,
           }}>
-            <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 16, color: "#1a1a1a" }}>
-              🌱 今日の複利を記録
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <div style={{ fontWeight: 800, fontSize: 16, color: "#1a1a1a" }}>🌱 今日の複利を記録</div>
+              <button onClick={() => setShowModal(false)} style={{
+                background: "none", border: "none", cursor: "pointer",
+                fontSize: 20, color: "#bbb", lineHeight: 1,
+              }}>✕</button>
             </div>
 
             <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
@@ -582,9 +586,16 @@ export default function FukuriApp() {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
               {newTags.map(tag => (
                 <span key={tag} style={{
+                  display: "inline-flex", alignItems: "center", gap: 4,
                   fontSize: 11, padding: "3px 10px", borderRadius: 20,
                   background: "#f0f7f0", color: "#5a8a5a", border: "1px solid #c8dfc8",
-                }}>#{tag}</span>
+                }}>
+                  #{tag}
+                  <button onClick={() => setNewTags(newTags.filter(t => t !== tag))} style={{
+                    background: "none", border: "none", cursor: "pointer",
+                    color: "#aaa", fontSize: 11, padding: 0, lineHeight: 1,
+                  }}>✕</button>
+                </span>
               ))}
             </div>
             <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
@@ -621,7 +632,7 @@ export default function FukuriApp() {
           position: "fixed", inset: 0, background: "#0006",
           display: "flex", alignItems: "center", justifyContent: "center",
           zIndex: 100, padding: 20,
-        }} onClick={e => e.target === e.currentTarget && setEditMode(false)}>
+        }} onMouseDown={e => e.target === e.currentTarget && setEditMode(false)}>
           <div style={{
             background: "#f7f5f0", borderRadius: 24,
             padding: "24px 20px 28px", width: "100%", maxWidth: 390,
@@ -690,7 +701,7 @@ export default function FukuriApp() {
         <div style={{
           position: "fixed", inset: 0, background: "#0006",
           display: "flex", alignItems: "flex-end", zIndex: 100,
-        }} onClick={e => e.target === e.currentTarget && setShowBadgeModal(false)}>
+        }} onMouseDown={e => e.target === e.currentTarget && setShowBadgeModal(false)}>
           <div style={{
             background: "#f7f5f0", borderRadius: "24px 24px 0 0",
             padding: "24px 20px 44px", width: "100%", maxWidth: 430, margin: "0 auto",
