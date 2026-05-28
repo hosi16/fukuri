@@ -600,7 +600,7 @@ export default function FukuriApp() {
             </div>
             <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
               <input value={newTag} onChange={e => setNewTag(e.target.value)}
-                onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addTag(); } }}
+                onKeyDown={e => { if (e.key === "Enter" && !e.nativeEvent.isComposing) { e.preventDefault(); addTag(); } }}
                 placeholder="タグ (Enterで追加)"
                 style={{
                   flex: 1, background: "#fff", border: "1px solid #e8e2d8",
