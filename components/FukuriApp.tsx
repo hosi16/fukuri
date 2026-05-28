@@ -544,11 +544,12 @@ export default function FukuriApp() {
       {showModal && (
         <div style={{
           position: "fixed", inset: 0, background: "#0006",
-          display: "flex", alignItems: "flex-end", zIndex: 100,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          zIndex: 100, padding: 20,
         }} onClick={e => e.target === e.currentTarget && setShowModal(false)}>
           <div style={{
-            background: "#f7f5f0", borderRadius: "24px 24px 0 0",
-            padding: "24px 20px 44px", width: "100%", maxWidth: 430, margin: "0 auto",
+            background: "#f7f5f0", borderRadius: 24,
+            padding: "24px 20px 28px", width: "100%", maxWidth: 390,
           }}>
             <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 16, color: "#1a1a1a" }}>
               🌱 今日の複利を記録
