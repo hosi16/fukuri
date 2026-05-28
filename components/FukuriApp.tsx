@@ -751,23 +751,31 @@ export default function FukuriApp() {
         display: "flex", justifyContent: "space-around",
         padding: "8px 0 20px", zIndex: 20,
       }}>
-        {["⊞", "🆘", "＋", "○"].map((icon, i) => {
-          const isPostBtn = i === 2;
-          const tabIdx = [0, 1, null, 2][i];
-          return (
-            <button key={i} onClick={() => isPostBtn ? setShowModal(true) : setActiveTab(tabIdx as number)} style={{
-              background: isPostBtn ? "#1a1a1a" : "none",
-              border: "none", cursor: "pointer",
-              color: isPostBtn ? "#fff" : (activeTab === tabIdx ? "#3d6b3d" : "#bbb"),
-              fontSize: isPostBtn ? 20 : 18,
-              width: isPostBtn ? 48 : 40, height: isPostBtn ? 48 : 40,
-              borderRadius: isPostBtn ? "50%" : 8,
+        {[
+          { icon: "⊞", tabIdx: 0, isPost: false, disabled: false },
+          { icon: "🆘", tabIdx: 1, isPost: false, disabled: false },
+          { icon: "＋", tabIdx: null, isPost: true, disabled: false },
+          { icon: "🔔", tabIdx: null, isPost: false, disabled: true },
+          { icon: "○", tabIdx: 2, isPost: false, disabled: false },
+        ].map((item, i) => (
+          <button key={i}
+            onClick={() => {
+              if (item.disabled) return;
+              if (item.isPost) setShowModal(true);
+              else if (item.tabIdx !== null) setActiveTab(item.tabIdx);
+            }}
+            style={{
+              background: item.isPost ? "#1a1a1a" : "none",
+              border: "none", cursor: item.disabled ? "default" : "pointer",
+              color: item.isPost ? "#fff" : item.disabled ? "#ddd" : (activeTab === item.tabIdx ? "#3d6b3d" : "#bbb"),
+              fontSize: item.isPost ? 20 : 18,
+              width: item.isPost ? 48 : 40, height: item.isPost ? 48 : 40,
+              borderRadius: item.isPost ? "50%" : 8,
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontWeight: 700, marginTop: isPostBtn ? -14 : 0,
+              fontWeight: 700, marginTop: item.isPost ? -14 : 0,
               transition: "all 0.2s",
-            }}>{icon}</button>
-          );
-        })}
+            }}>{item.icon}</button>
+        ))}
       </div>
 
       <style>{`
