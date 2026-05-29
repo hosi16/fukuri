@@ -84,6 +84,7 @@ export default function FukuriApp() {
   const [editRole, setEditRole] = useState("");
   const [editAvatar, setEditAvatar] = useState("");
   const [savingProfile, setSavingProfile] = useState(false);
+  const [isFirstSetup, setIsFirstSetup] = useState(false);
 
   const fetchPosts = useCallback(async (supabase: ReturnType<typeof createClient>, userId: string) => {
     const { data } = await supabase
@@ -157,6 +158,15 @@ export default function FukuriApp() {
       }
 
       setMyProfile(profile);
+      // 初回登録時（肩書きが未設定）はプロフィール編集を促す
+      if (!profile?.role) {
+        setEditName(profile?.display_name || "");
+        setEditHandle(profile?.handle || "");
+        setEditRole("");
+        setEditAvatar(profile?.avatar || "");
+        setIsFirstSetup(true);
+        setEditMode(true);
+      }
       await fetchPosts(supabase, user.id);
       setLoadingPosts(false);
     };
@@ -250,6 +260,7 @@ export default function FukuriApp() {
     if (data) setMyProfile(data);
     setSavingProfile(false);
     setEditMode(false);
+    setIsFirstSetup(false);
   };
 
   const handleLogout = async () => {
@@ -574,14 +585,19 @@ export default function FukuriApp() {
               ))}
             </div>
 
-            <textarea value={newPost} onChange={e => setNewPost(e.target.value)}
+            <textarea value={newPost} onChange={e => setNewPost(e.target.value.slice(0, 280))}
               placeholder={isHelp ? "今、何で困ってる？気軽に投げてみて..." : "今日の経験・気づき・学びを気軽に..."}
               style={{
                 width: "100%", minHeight: 110, background: "#fff",
-                border: "1px solid #e8e2d8", borderRadius: 12,
+                border: `1px solid ${newPost.length >= 280 ? "#ff6b4a" : "#e8e2d8"}`, borderRadius: 12,
                 color: "#1a1a1a", fontSize: 14, padding: "12px",
                 resize: "none", outline: "none", lineHeight: 1.7, boxSizing: "border-box",
               }} autoFocus />
+            <div style={{ textAlign: "right", fontSize: 12, marginTop: 4,
+              color: newPost.length >= 270 ? (newPost.length >= 280 ? "#ff6b4a" : "#e8a020") : "#bbb",
+            }}>
+              {newPost.length} / 280
+            </div>
 
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
               {newTags.map(tag => (
@@ -613,12 +629,13 @@ export default function FukuriApp() {
                 fontSize: 12, cursor: "pointer",
               }}>＋</button>
             </div>
-            <button onClick={handlePost} disabled={posting} style={{
+            <button onClick={handlePost} disabled={posting || newPost.length === 0 || newPost.length > 280} style={{
               width: "100%", marginTop: 16, padding: "14px",
               background: "#1a1a1a", color: "#f7f5f0",
               border: "none", borderRadius: 12, fontSize: 15,
-              fontWeight: 800, cursor: posting ? "not-allowed" : "pointer",
-              opacity: posting ? 0.7 : 1,
+              fontWeight: 800,
+              cursor: (posting || newPost.length === 0 || newPost.length > 280) ? "not-allowed" : "pointer",
+              opacity: (posting || newPost.length === 0 || newPost.length > 280) ? 0.4 : 1,
             }}>
               {posting ? "投稿中..." : isHelp ? "🆘 助けを求める" : "🌱 複利として記録する"}
             </button>
@@ -637,8 +654,15 @@ export default function FukuriApp() {
             background: "#f7f5f0", borderRadius: 24,
             padding: "24px 20px 28px", width: "100%", maxWidth: 390,
           }}>
-            <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 20, color: "#1a1a1a" }}>
-              ✏️ プロフィール編集
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ fontWeight: 800, fontSize: 16, color: "#1a1a1a" }}>
+                {isFirstSetup ? "🌱 プロフィールを設定しよう" : "✏️ プロフィール編集"}
+              </div>
+              {isFirstSetup && (
+                <div style={{ fontSize: 13, color: "#888", marginTop: 6 }}>
+                  はじめに表示名と肩書きを設定してください
+                </div>
+              )}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <div>
